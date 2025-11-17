@@ -1,11 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Console Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rock • Paper • Scissors — Polished UI</title>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#fff; --muted:#6b7280; --accent:#2563eb; --win:#10b981; --lose:#ef4444;
+      --glass: rgba(255,255,255,0.6);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 60%);display:flex;align-items:center;justify-content:center;padding:24px}
+
+    .container{width:480px;max-width:94vw}
+    .card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 10px 30px rgba(18,38,63,0.08);}
+
+    header{display:flex;align-items:center;justify-content:space-between}
+    h1{font-size:18px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+
+    .board{display:grid;grid-template-columns:1fr auto;gap:12px;margin-top:18px;align-items:start}
+    .left{padding-right:8px}
+
+    .choices{display:flex;gap:10px}
+    button.choice{flex:1;padding:12px;border-radius:10px;border:1px solid #eef2ff;background:linear-gradient(180deg,#fff,#fbfdff);font-weight:700;cursor:pointer;font-size:15px;transition:transform .12s ease, box-shadow .12s ease;display:flex;align-items:center;justify-content:center;gap:8px}
+    button.choice:active{transform:translateY(2px)}
+    button.choice:hover{box-shadow:0 8px 18px rgba(37,99,235,0.08)}
+    button.choice[disabled]{opacity:.45;cursor:default;transform:none}
+
+    .resultBox{margin-top:14px;min-height:72px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(37,99,235,0.03),rgba(37,99,235,0.01));border:1px solid rgba(37,99,235,0.04)}
+    .resultText{font-weight:700}
+    .meta{color:var(--muted);font-size:13px;margin-top:6px}
+
+    .scorecard{width:140px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(0,0,0,0.02),rgba(0,0,0,0.01));text-align:center}
+    .score{font-size:20px;font-weight:800}
+    .target{font-size:12px;color:var(--muted)}
+
+    .log{margin-top:12px;max-height:140px;overflow:auto;padding-right:6px}
+    .log div{padding:8px;border-radius:8px;margin-bottom:8px;background:#fff;border:1px solid #f1f5f9;font-size:13px}
+
+    .controls{display:flex;gap:8px;margin-top:12px}
+    .btn{padding:8px 10px;border-radius:8px;border:0;cursor:pointer}
+    .btn.secondary{background:#fff;border:1px solid #e6eefc}
+    .btn.primary{background:var(--accent);color:#fff}
+
+    .badge{display:inline-block;padding:6px 8px;border-radius:999px;font-weight:700}
+    .win-badge{background:rgba(16,185,129,0.12);color:var(--win)}
+    .lose-badge{background:rgba(239,68,68,0.08);color:var(--lose)}
+
+    /* small animations */
+    .pop{animation:pop .28s ease}
+    @keyframes pop{0%{transform:scale(.96);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1)}}
+
+    /* responsive */
+    @media (max-width:520px){.board{grid-template-columns:1fr}} 
+  </style>
 </head>
 <body>
-  <script src="script.js"></script>
+  <div class="container">
+    <div class="card" role="application" aria-label="Rock Paper Scissors game">
+      <header>
+        <div>
+          <h1>Rock • Paper • Scissors</h1>
+          <div class="sub">First to <strong>5</strong> wins — click a button or press keys <kbd>R</kbd>/<kbd>P</kbd>/<kbd>S</kbd></div>
+        </div>
+        <div class="scorecard" aria-hidden>
+          <div class="score" id="score">You: 0 | CPU: 0</div>
+          <div class="target">Target: 5 pts</div>
+        </div>
+      </header>
+
+      <div class="board">
+        <div class="left">
+          <div class="choices" role="group" aria-label="Choices">
+            <button class="choice pop" id="rock" data-choice="rock">✊ Rock</button>
+            <button class="choice" id="paper" data-choice="paper">🖐️ Paper</button>
+            <button class="choice" id="scissors" data-choice="scissors">✌️ Scissors</button>
+          </div>
+
+          <div class="resultBox" id="resultBox" aria-live="polite">
+            <div class="resultText" id="resultText">Make your move!</div>
+            <div class="meta" id="metaText">Waiting for your choice…</div>
+          </div>
+
+          <div class="controls">
+            <button class="btn secondary" id="reset">Reset</button>
+            <button class="btn primary" id="play-again" style="display:none">Play Again</button>
+          </div>
+
+          <div class="log" id="log"></div>
+        </div>
+
+        <aside>
+          <div style="text-align:center;margin-top:12px">
+            <div style="font-size:13px;color:var(--muted);margin-bottom:8px">Computer choice</div>
+            <div id="cpuChoice" style="font-size:28px;min-height:44px">—</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- load the external script file (defer ensures DOM is ready) -->
+  <script src="script.js" defer></script>
 </body>
 </html>
